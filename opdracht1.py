@@ -13,6 +13,6 @@ def approx_svd(A, j):
         return rot2d(prevA[0][0], prevA[1][0])@prevA
     return prevA@rot2d(prevA[0][0], prevA[1][0])
 
-test = np.array(((1, 2),(2, 3)))
+# test = np.array(((1, 2),(2, 3)))
 
-print(approx_svd(test, 10))
+# print(approx_svd(test, 10))
