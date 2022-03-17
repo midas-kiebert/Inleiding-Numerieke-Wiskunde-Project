@@ -1,4 +1,6 @@
+from random import random
 import numpy as np
+from scipy import rand
 import scipy.linalg
 
 
@@ -44,31 +46,34 @@ def rot_rechts(n, a, b, i):
 def nul_rechts(A, i, j):
     c = A[i-1][j-2]
     d = A[i-1][j-1]
-    return rot_rechts(len(A), c, d, (i-1))
+    return rot_rechts(len(A[0]), c, d, (i))
 
 
 def bidiagonaliseer(A):
     matrix = A
+
     for i in range(2, len(A)+1)[::-1]:
         matrix = nul_links(matrix, i, 1)@matrix
-    # print(matrix)
-    #print(nul_rechts(matrix, 1, 2))
-    #matrix = matrix@nul_rechts(matrix, 1, 2)
+    matrix = matrix@nul_rechts(matrix, 1, 3)
     for i in range(3, len(A)+1)[::-1]:
         matrix = nul_links(matrix, i, 2)@matrix
+
     matrix = nul_links(matrix, 4, 3)@matrix
+
     return matrix
 
 
 test = np.array(((1, 2), (2, 3)))
 
 tessst = nul_rechts(np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
-                    (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2))), 1, 2)
+                              (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2))), 1, 2)
 
 mattie = np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
-                  (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2)))
+                   (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2)))
 
 randommatrix = np.random.rand(4, 3)
+nul_matrix = nul_rechts(randommatrix, 1, 3)
+# print(nul_matrix)
 
 print(bidiagonaliseer(randommatrix))
 
