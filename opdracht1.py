@@ -51,7 +51,6 @@ def nul_rechts(A, i, j):
 
 def bidiagonaliseer(A):
     matrix = A
-
     for i in range(2, len(A)+1)[::-1]:
         matrix = nul_links(matrix, i, 1)@matrix
     matrix = matrix@nul_rechts(matrix, 1, 3)
