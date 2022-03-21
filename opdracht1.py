@@ -49,7 +49,6 @@ def nul_rechts(A, i, j):
 
 def bidiagonaliseer(A):
     matrix = A
-
     for i in range(2, len(A)+1)[::-1]:
         matrix = nul_links(matrix, i, 1)@matrix
     matrix = matrix @ nul_rechts(matrix, 1, 3)
@@ -60,8 +59,9 @@ def bidiagonaliseer(A):
 
     return matrix
 
-def link_rotaties(A):
-    A=matrix
+
+def links_rotaties(A):
+    matrix = A
     for i in range(2, len(A)+1)[::-1]:
         matrix = nul_links(matrix, i, 1)@matrix
     for i in range(3, len(A)+1)[::-1]:
@@ -69,20 +69,22 @@ def link_rotaties(A):
     matrix = nul_links(matrix, 4, 3) @ matrix
     return matrix
 
+
 def bidiagonaliseer_stap(A):
     U = links_rotaties(A)
     W = A @ nul_rechts(A, 1, 3)
     return (U, bidiagonaliseer(A), W)
 
+
 def boven_bidiagonaliseer_alle(A):
     for j in range(1, len(A[0])+1):
         for i in range(1, len(A)+1)[::-1]:
-            if i==j or i-1==j:
+            if i == j or i-1 == j:
                 pass
-            elif j>i:
-                A = A @ nul_rechts(A, i, j)
+            elif j > i:
+                pass
             else:
-                A=nul_links(A, i,j) @ A
+                A = nul_links(A, i, j) @ A
     return A
 
 def volgorde_links(A):
@@ -102,7 +104,8 @@ def volgorde_links(A):
 # mattie = np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
 #                    (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2)))
 
-randommatrix = np.random.rand(4,3)
+
+randommatrix = np.random.rand(4, 3)
 # nul_matrix = nul_rechts(randommatrix, 1, 3)
 
 print(boven_bidiagonaliseer_alle(randommatrix))
@@ -111,6 +114,7 @@ print(boven_bidiagonaliseer_alle(randommatrix))
 # print(bidiagonaliseer(randommatrix))
 
 # print(mattie@tessst)
+
 
 def boven_naar_onder(A):
     n = len(A)
@@ -123,6 +127,7 @@ def boven_naar_onder(A):
         j += 1
     return A
 
+
 def onder_naar_boven(A):
     n = len(A)
     m = len(A[0])
@@ -133,6 +138,7 @@ def onder_naar_boven(A):
         i += 1
         j += 1
     return A
+
 
 def iteratie(A, n):
     # Maak bovendiagonaal
