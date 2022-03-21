@@ -85,6 +85,15 @@ def boven_bidiagonaliseer_alle(A):
                 A=nul_links(A, i,j) @ A
     return A
 
+def volgorde_links(A):
+    for j in range(1, len(A[0])+1):
+        for i in range(1, len(A)+1)[::-1]:
+            if i==j or i-1==j:
+                pass
+            else:
+                A=nul_links(A, i,j) @ A
+    return A
+
 # test = np.array(((1, 2), (2, 3)))
 
 # tessst = nul_rechts(np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
