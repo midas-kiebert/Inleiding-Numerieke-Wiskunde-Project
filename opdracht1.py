@@ -9,8 +9,6 @@ def rot2d(a, b):
     matrix = np.array(((a, b), (-b, a)))
     return np.multiply(matrix, factor)
 
-# COMMENT
-
 
 def approx_svd(A, j):
     if j == 0:
@@ -46,38 +44,100 @@ def rot_rechts(n, a, b, i):
 def nul_rechts(A, i, j):
     c = A[i-1][j-2]
     d = A[i-1][j-1]
-    return rot_rechts(len(A[0]), c, d, (i))
+    return rot_rechts(len(A[0]), c, d, (j-2))
 
 
 def bidiagonaliseer(A):
     matrix = A
     for i in range(2, len(A)+1)[::-1]:
         matrix = nul_links(matrix, i, 1)@matrix
-    matrix = matrix@nul_rechts(matrix, 1, 3)
+    matrix = matrix @ nul_rechts(matrix, 1, 3)
     for i in range(3, len(A)+1)[::-1]:
-        matrix = nul_links(matrix, i, 2)@matrix
+        matrix = nul_links(matrix, i, 2) @ matrix
 
-    matrix = nul_links(matrix, 4, 3)@matrix
+    matrix = nul_links(matrix, 4, 3) @ matrix
 
     return matrix
 
 
-test = np.array(((1, 2), (2, 3)))
+def links_rotaties(A):
+    matrix = A
+    for i in range(2, len(A)+1)[::-1]:
+        matrix = nul_links(matrix, i, 1)@matrix
+    for i in range(3, len(A)+1)[::-1]:
+        matrix = nul_links(matrix, i, 2) @ matrix
+    matrix = nul_links(matrix, 4, 3) @ matrix
+    return matrix
 
-tessst = nul_rechts(np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
-                              (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2))), 1, 2)
 
-mattie = np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
-                   (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2)))
+def bidiagonaliseer_stap(A):
+    U = links_rotaties(A)
+    W = A @ nul_rechts(A, 1, 3)
+    return (U, bidiagonaliseer(A), W)
+
+
+def boven_bidiagonaliseer_alle(A):
+    for j in range(1, len(A[0])+1):
+        for i in range(1, len(A)+1)[::-1]:
+            if i == j or i-1 == j:
+                pass
+            elif j > i:
+                pass
+            else:
+                A = nul_links(A, i, j) @ A
+    return A
+
+# test = np.array(((1, 2), (2, 3)))
+
+# tessst = nul_rechts(np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
+#                               (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2))), 1, 2)
+
+# mattie = np.array(((1, 2, 3, 4, 4), (4, 3, 2, 1, 2),
+#                    (3, 2, 1, 3, 5), (3, 4, 7, 4, 3), (3, 4, 5, 3, 2)))
+
 
 randommatrix = np.random.rand(4, 3)
-nul_matrix = nul_rechts(randommatrix, 1, 3)
+# nul_matrix = nul_rechts(randommatrix, 1, 3)
+
+print(boven_bidiagonaliseer_alle(randommatrix))
 # print(nul_matrix)
 
-print(bidiagonaliseer(randommatrix))
-
+# print(bidiagonaliseer(randommatrix))
 
 # print(mattie@tessst)
+
+
+def boven_naar_onder(A):
+    n = len(A)
+    m = len(A[0])
+    i = 2
+    j = 1
+    while j < n and i < m:
+        A = A @ nul_rechts(A, i, j)
+        i += 1
+        j += 1
+    return A
+
+
+def onder_naar_boven(A):
+    n = len(A)
+    m = len(A[0])
+    i = 1
+    j = 2
+    while j < n and i < m:
+        A = nul_links(A, i, j) @ A
+        i += 1
+        j += 1
+    return A
+
+
+def iteratie(A, n):
+    # Maak bovendiagonaal
+    for _ in range(n):
+        A = boven_naar_onder(A)
+        A = onder_naar_boven(A)
+    return A
+
 
 # Voor nul links werken alleen waardes in de onderdriehoek, voor nul rechts
 # alleen bovendriehoeks. En voor beide werkt de diagonaal niet.
