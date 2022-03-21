@@ -77,14 +77,10 @@ def bidiagonaliseer_stap(A):
 
 
 def boven_bidiagonaliseer_alle(A):
-    for j in range(1, len(A[0])+1):
-        for i in range(1, len(A)+1)[::-1]:
-            if i == j or i-1 == j:
-                pass
-            elif j > i:
-                pass
-            else:
-                A = nul_links(A, i, j) @ A
+    for i in range(2, len(A)+1)[::-1]:
+        A = nul_links(A, i, 1)@A
+    for j in range(2, len(A[1])+1)[::-1]:
+        A = A@nul_rechts(A, 1, j)
     return A
 
 # test = np.array(((1, 2), (2, 3)))
@@ -99,7 +95,7 @@ def boven_bidiagonaliseer_alle(A):
 randommatrix = np.random.rand(4, 3)
 # nul_matrix = nul_rechts(randommatrix, 1, 3)
 
-print(boven_bidiagonaliseer_alle(randommatrix))
+# print(boven_bidiagonaliseer_alle(randommatrix))
 # print(nul_matrix)
 
 # print(bidiagonaliseer(randommatrix))
@@ -112,8 +108,8 @@ def boven_naar_onder(A):
     m = len(A[0])
     i = 2
     j = 1
-    while j < n and i < m:
-        A = A @ nul_rechts(A, i, j)
+    while j <= n and i <= m:
+        A = A @ nul_rechts(A, j, i)
         i += 1
         j += 1
     return A
@@ -124,8 +120,8 @@ def onder_naar_boven(A):
     m = len(A[0])
     i = 1
     j = 2
-    while j < n and i < m:
-        A = nul_links(A, i, j) @ A
+    while j <= n and i <= m:
+        A = nul_links(A, j, i) @ A
         i += 1
         j += 1
     return A
@@ -137,6 +133,61 @@ def iteratie(A, n):
         A = boven_naar_onder(A)
         A = onder_naar_boven(A)
     return A
+
+
+np.set_printoptions(precision=4, suppress=True)
+
+
+N = 6
+M = 7
+A = np.random.rand(N, M)
+print(np.linalg.svd(A))
+for i in range(1, max(N, M)):
+    for j in range(N, i, -1):
+        if i > M:
+            continue
+        A = nul_links(A, j, i)@A
+    for j in range(M, i+1, -1):
+        if i > N:
+            continue
+        A = A@nul_rechts(A, i, j)
+
+
+print(iteratie(A, 16))
+
+
+# # Left Column
+# A = nul_links(A, 5, 1)@A
+# A = nul_links(A, 4, 1)@A
+# A = nul_links(A, 3, 1)@A
+# A = nul_links(A, 2, 1)@A
+
+# # Top Row
+# A = A@nul_rechts(A, 1, 5)
+# A = A@nul_rechts(A, 1, 4)
+# A = A@nul_rechts(A, 1, 3)
+
+# # Second Column
+# A = nul_links(A, 5, 2)@A
+# A = nul_links(A, 4, 2)@A
+# A = nul_links(A, 3, 2)@A
+
+# # Second Row
+# A = A@nul_rechts(A, 2, 5)
+# A = A@nul_rechts(A, 2, 4)
+
+# # Third Column
+# A = nul_links(A, 5, 3)@A
+# A = nul_links(A, 4, 3)@A
+
+# # Third Row
+# A = A@nul_rechts(A, 3, 5)
+
+# # Fourth Column:
+# A = nul_links(A, 5, 4)@A
+
+
+# print(A)
 
 
 # Voor nul links werken alleen waardes in de onderdriehoek, voor nul rechts
