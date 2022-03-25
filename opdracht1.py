@@ -3,6 +3,8 @@ import numpy as np
 from scipy import rand
 import scipy.linalg
 
+np.set_printoptions(precision=4, suppress=True)
+
 
 def rot2d(a, b):
     factor = 1/(np.sqrt(a**2+b**2))
@@ -21,6 +23,11 @@ def approx_svd(A, j):
 
 def sigma(a):
     return np.linalg.svd(a)
+
+
+A = np.random.rand(2, 2)
+print(approx_svd(A, 1))
+print(sigma(A))
 
 
 def rot(n, a, b, i):
@@ -144,11 +151,8 @@ def iteratie(A, n):
     return A
 
 
-np.set_printoptions(precision=4, suppress=True)
-
-
-N = 6
-M = 7
+N = 3
+M = 5
 A = np.random.rand(N, M)
 print(np.linalg.svd(A))
 for i in range(1, max(N, M)):
@@ -160,8 +164,6 @@ for i in range(1, max(N, M)):
         if i > N:
             continue
         A = A@nul_rechts(A, i, j)
-
-
 print(iteratie(A, 16))
 
 
